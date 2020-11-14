@@ -1,3 +1,19 @@
+# BMRC-specific usage 
+
+This is a fork of the profile code was originally written by [drjbarker](https://github.com/drjbarker/snakemake-gridengine), and I made 
+the following modifications ([diffs](https://github.com/sraorao/snakemake-gridengine/commit/dadfcdff353d79a0ae897268e43096b8d8ccaadf)) to 
+better suit the requirements of the BMRC cluster at the University of Oxford:
+
+- Logger warning turned off when the `sge-status` script can not find the job, because in my experience, this seems to 
+be because `qacct` has not updated yet
+- `cluster.yaml` and `sge-submit.py` have been edited to reflect common usage on the Oxford BMRC cluster (Rescomp). 
+Importantly, `export-env` (`-V`) has been disabled as per 
+[BMRC recommendations](https://www.medsci.ox.ac.uk/divisional-services/support-services-1/bmrc/cluster-usage/#submitting-jobs---step-by-step-guide-for-new-users). 
+In addition, I have added a hostname option in `cluster.yaml` to specify node names.
+- `sge-jobscript.sh` has been edited so that the Anaconda module can be loaded when Snakemake is using conda 
+environments. This may conflict with any other environment modules loaded in individual rules.
+
+
 # gridengine
 
 This is written for the arc4 cluster at the University of Leeds, but should be general enough to work in most SGE setups.
