@@ -6,21 +6,12 @@ __resources__:
 
 __default__:
   join: yes
-  output: /well/hamdy/users/hyn435/cluster_output/
+  output: cluster_logs/
   name: "default_job"
   queue: "short.qc"
-  project: "hamdy.prjc"
+  project: "project.prjc"
   cwd: ""
   # export_env: "" # commented out on 5 Nov 2020 - RAO
   pe: "shmem 1" 
 
-generate_csv:
-  join: yes
-  output: cluster_logs/
-  name: "generate_csv"
-  queue: "short.qc"
-  project: "hamdy.prjc"
-  cwd: ""
-  # export_env: "" # commented out on 5 Nov 2020 - RAO
-  pe: "shmem 1"
 
