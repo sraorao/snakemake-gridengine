@@ -1,15 +1,26 @@
 __resources__:
-  coproc_v100: 
-    - "gpu"
-    - "nvidia_gpu"
-  node_type: 
-    - "node_type"
-    - "machine_type"
-  nodes: "np" 
-  ppn: "proc_per_node"
+  hostname: "*"
+#  gpu: 
+#    - "gpu"
+#    - "nvidia_gpu"
 
 __default__:
-  runtime: "48:0:0"
   join: yes
-  output: logs/sge/snakejob.{rulename}.{jobid}.log
-  error: logs/sge/snakejob.{rulename}.{jobid}.log
+  output: /well/hamdy/users/hyn435/cluster_output/
+  name: "default_job"
+  queue: "short.qc"
+  project: "hamdy.prjc"
+  cwd: ""
+  # export_env: "" # commented out on 5 Nov 2020 - RAO
+  pe: "shmem 1" 
+
+generate_csv:
+  join: yes
+  output: cluster_logs/
+  name: "generate_csv"
+  queue: "short.qc"
+  project: "hamdy.prjc"
+  cwd: ""
+  # export_env: "" # commented out on 5 Nov 2020 - RAO
+  pe: "shmem 1"
+

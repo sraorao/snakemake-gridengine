@@ -7,7 +7,7 @@ import time
 import logging
 
 logger = logging.getLogger("__name__")
-logger.setLevel(40)
+logger.setLevel(20)
 
 STATUS_ATTEMPTS = 20
 
@@ -33,6 +33,7 @@ for i in range(STATUS_ATTEMPTS):
             break
 
         job_status = "running"
+
         break
 
     except sp.CalledProcessError as e:
@@ -43,10 +44,9 @@ for i in range(STATUS_ATTEMPTS):
         # this will also provide the exit status (0 on success, 128 + exit_status on fail)
         # Try getting job with scontrol instead in case sacct is misconfigured
         try:
-            qacct_res = sp.check_output(shlex.split(f"qacct -j {jobid}"))
+            qacct_res = sp.check_output(shlex.split(f"qacct -j {jobid}"), stderr = sp.STDOUT) # edited by RAO 05 Nov 2020
 
             exit_code = int(re.search("exit_status  ([0-9]+)", qacct_res.decode()).group(1))
-
             if exit_code == 0:
                 job_status = "success"
                 break
@@ -56,8 +56,8 @@ for i in range(STATUS_ATTEMPTS):
                 break
 
         except sp.CalledProcessError as e:
-            logger.warning("qacct process error")
-            logger.warning(e)
+            logger.warning("qacct has probably not updated yet") # message changed - RAO 05 Nov 2020
+            # logger.warning(e) 
             if i >= STATUS_ATTEMPTS - 1:
                 job_status = "failed"
                 break
