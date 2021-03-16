@@ -20,7 +20,7 @@ for i in range(STATUS_ATTEMPTS):
     # first try qstat to see if job is running
     # we can use `qstat -s pr -u "*"` to check for all running and pending jobs
     try:
-        qstat_res = sp.check_output(shlex.split(f"qstat -s pr")).decode().strip()
+        qstat_res = sp.check_output(shlex.split(f"qstat -s prs")).decode().strip()  # added s for suspended jobs - RAO 02 Dec 2020
 
         # skip the header using [2:]
         res = {
@@ -44,7 +44,7 @@ for i in range(STATUS_ATTEMPTS):
         # this will also provide the exit status (0 on success, 128 + exit_status on fail)
         # Try getting job with scontrol instead in case sacct is misconfigured
         try:
-            qacct_res = sp.check_output(shlex.split(f"qacct -j {jobid}"), stderr = sp.STDOUT) # edited by RAO 05 Nov 2020
+            qacct_res = sp.check_output(shlex.split(f"qacct -j {jobid}"), stderr = sp.STDOUT)  # edited by RAO 05 Nov 2020
 
             exit_code = int(re.search("exit_status  ([0-9]+)", qacct_res.decode()).group(1))
             if exit_code == 0:
@@ -56,7 +56,7 @@ for i in range(STATUS_ATTEMPTS):
                 break
 
         except sp.CalledProcessError as e:
-            logger.warning("qacct has probably not updated yet") # message changed - RAO 05 Nov 2020
+            logger.warning(f"qacct has probably not updated yet for job: {jobid}")  # message changed - RAO 05 Nov 2020; 02 Dec 2020
             # logger.warning(e) 
             if i >= STATUS_ATTEMPTS - 1:
                 job_status = "failed"
@@ -65,5 +65,5 @@ for i in range(STATUS_ATTEMPTS):
                 # qacct can be quite slow to update on large servers
                 time.sleep(5)
         pass
-
+    time.sleep(20)  # edited by RAO
 print(job_status)
